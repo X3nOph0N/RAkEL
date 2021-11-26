@@ -2,12 +2,19 @@
 
 This repository is under develop yet.
 
+## Progress
+
+1. configuration file not finished.
+2. no test is done.
+
 ## Evaluation
 <!-- |evaluation criterion |LP||||
 |---|---|---|---|---|
 |hamming loss|||||
 |ranking loss|||||
 |one error||||| -->
+
+currently no evaluation is done.
 
 ## Requrements
 
