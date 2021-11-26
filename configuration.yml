@@ -1,0 +1,10 @@
+# Try not to use all parameters at the same time to avoid undefined behaviors
+# Here LPModel can only be one of 'RandomForest', 'SVM' and 'NB'
+LPModel: 'RandomForest'
+# Below is RandomForest Parameters
+dataPath: './data/BoolTrainData/'
+
+# Below is SVM parameters
+# dataPath: './data/BoolTrainData/'
+# Below is NB parameters
+# dataPath: './data/BoolTrainData/'
