@@ -4,11 +4,12 @@ from sklearn.svm import LinearSVC as SVMClassifier
 from sklearn.naive_bayes import GaussianNB as NBClassifier
 from sklearn.metrics import f1_score
 from sklearn.metrics import recall_score
-from numpy import ndarray, array,zeros,sum,sign,cast,int32,bool_
+from numpy import ndarray, array, zeros, sum, sign, cast, int32, bool_
 from time import ctime, time
 from random import sample
-from math import factorial
 from tqdm import tqdm
+# from math import factorial
+
 
 class LP():
     """
@@ -16,13 +17,14 @@ class LP():
     @params:
     classifier: the classifier used in LP
     """
-    def __init__(self, classifier: str, **kwargs)->None:
+
+    def __init__(self, classifier: str, **kwargs) -> None:
         self._classifier = getattr(globals(), classifier+'Classifier')(kwargs)
         self._transform_dict = {}
         self._reverse_transform_dict = {}
         self._label_count = None
 
-    def fit(self, x: ndarray, y: ndarray)->None:
+    def fit(self, x: ndarray, y: ndarray) -> None:
         """
         This function will first build the powerset for current label and start corresponding classifier
         fiting routing.
@@ -36,7 +38,7 @@ class LP():
         self._classifier.fit(x, self.transform(y))
         return
 
-    def build_dict(self,y:ndarray)->None:
+    def build_dict(self, y: ndarray) -> None:
         """
         This function will build the tranform diction from the y label data.
         @params:
@@ -49,10 +51,10 @@ class LP():
         for i in powerset:
             self._transform_dict[i] = self._label_count
             self._reverse_transform_dict[self._label_count] = i
-            self._label_count+=1
+            self._label_count += 1
         return
 
-    def predict(self, x: ndarray)->ndarray:
+    def predict(self, x: ndarray) -> ndarray:
         """
         This function will give prediction to given x.
         WARNING: this function's behavior might change if the LP classifier's implememt is changed.
@@ -63,7 +65,7 @@ class LP():
         """
         return self.inverser_transform(self._classifier.predict(x))
 
-    def transform(self, y: ndarray)->int:
+    def transform(self, y: ndarray) -> int:
         """
         This function will transform the origin y to a unique label so the origin problem is 
         changed into a multiclass classification problem.
@@ -73,12 +75,12 @@ class LP():
         @outputs:
         a integer stands for the corresponding class that those label belong to.
         """
-        if len(y.shape)>1:
+        if len(y.shape) > 1:
             return array([self._transform_dict[y_i] for y_i in y])
-        else :
+        else:
             return self._transform_dict[y]
-    
-    def inverse_transform(self, y)->ndarray:
+
+    def inverse_transform(self, y: ndarray) -> ndarray:
         """
         This function will transform the predicted class to origin labels.
         WARNING: error if called before fit() is called.
@@ -88,9 +90,9 @@ class LP():
         a array that stands the origin label situation,1 for positive, 
         -1 for negative and 0 for masked
         """
-        if len(y.shape)>1:
+        if len(y.shape) > 1:
             return array([self._transform_dict[y_i] for y_i in y])
-        else :
+        else:
             return self._transform_dict[y]
 
 
@@ -104,7 +106,6 @@ class RAKEL():
     """
 
     def __init__(self, classifier: str, *args, **kwargs) -> None:
-
         self._LP_type = classifier
         self._k = None
         self._m = None
@@ -136,10 +137,10 @@ class RAKEL():
             mask[[idx for idx in k_l]] = [1 for idx in k_l]
             self._masks.append(mask)
         for i in range(m):
-            self._LP_classifiers[i].fit(train_x,train_y*self._masks[i])
+            self._LP_classifiers[i].fit(train_x, train_y*self._masks[i])
         return
 
-    def predict(self,x, *args, **kwargs):
+    def predict(self, x, *args, **kwargs):
         """
         This function will give the prediction to the given labels.
         @params:
@@ -147,17 +148,17 @@ class RAKEL():
         @outputs:
         result: predicted labels, 1 for positive,-1 for negative and 0 for masked.
         """
-        result = sum([classifier.predict(x) for classifier in self._LP_classifiers],axis=1)
+        result = sum([classifier.predict(x)
+                     for classifier in self._LP_classifiers], axis=1)
         result = sign(result*2+1)
         return result
-    
-    def eval(self,val_X, val_Y, print_result: bool = True, save_result: bool = False, *args, **kwargs):
+
+    def eval(self, val_X, val_Y, print_result: bool = True, save_result: bool = False, *args, **kwargs):
         """
         This function will give the prediction to the given labels.
         @params:
         val_x: validation labels
         val_y: validation targets
-        metric: a dict of metric function, if given use all the function inside it to evaluate, otherwise use default metrics
         TODO
         @output:
         None
@@ -165,22 +166,23 @@ class RAKEL():
         start_time = time()
         metrics = {}
         pred_Y = []
-        for x in tqdm(val_X,desc='predicting...'):
+        for x in tqdm(val_X, desc='predicting...'):
             pred_Y.append(self.predict(x))
         print('evaluating...')
-        metrics['F1 score'] = f1_score(val_Y,pred_Y)
-        metrics['Recall score'] = recall_score(val_Y,pred_Y)
+        metrics['F1 score'] = f1_score(val_Y, pred_Y)
+        metrics['Recall score'] = recall_score(val_Y, pred_Y)
         print('evaluation done.')
         end_time = time()
         if save_result:
             if 'savePath' in kwargs:
                 result_file = open(kwargs['savePath'], 'wt')
-            else :
-                result_file = open(ctime()+'result.txt','wt')
+            else:
+                result_file = open(ctime()+'result.txt', 'wt')
             result_file.write('experiment time:'+ctime()+'\n')
             result_file.write("run time:"+str(end_time-start_time)+'\n')
             for metric in metrics:
-                result_file.write('metric '+str(metric)+':'+str(metrics[metric])+'\n')
+                result_file.write('metric '+str(metric) +
+                                  ':'+str(metrics[metric])+'\n')
             result_file.close()
         if print_result:
             system('cls')
