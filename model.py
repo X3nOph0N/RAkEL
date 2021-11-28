@@ -2,8 +2,7 @@ from os import system
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.svm import LinearSVC as SVMClassifier
 from sklearn.naive_bayes import GaussianNB as NBClassifier
-from sklearn.metrics import f1_score
-from sklearn.metrics import recall_score
+from sklearn.metrics import f1_score, accuracy_score, hamming_loss
 from numpy import ndarray, array, zeros, sum, sign, cast, int32, bool_
 from time import ctime, time
 from random import sample
@@ -169,8 +168,10 @@ class RAKEL():
         for x in tqdm(val_X, desc='predicting...'):
             pred_Y.append(self.predict(x))
         print('evaluating...')
-        metrics['F1 score'] = f1_score(val_Y, pred_Y)
-        metrics['Recall score'] = recall_score(val_Y, pred_Y)
+        metrics['macro F1 score'] = f1_score(val_Y, pred_Y, average='macro')
+        metrics['micro F1 score'] = f1_score(val_Y, pred_Y, average='micro')
+        metrics['hamming loss score'] = hamming_loss(val_Y, pred_Y)
+        metrics['acc score'] = accuracy_score(val_Y, pred_Y)
         print('evaluation done.')
         end_time = time()
         if save_result:
@@ -181,7 +182,7 @@ class RAKEL():
             result_file.write('experiment time:'+ctime()+'\n')
             result_file.write("run time:"+str(end_time-start_time)+'\n')
             for metric in metrics:
-                result_file.write('metric '+str(metric) +
+                result_file.write(metric +
                                   ':'+str(metrics[metric])+'\n')
             result_file.close()
         if print_result:
