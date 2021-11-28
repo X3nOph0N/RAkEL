@@ -1,3 +1,10 @@
+"""
+command example:
+```python
+python main.py --config-file configuration.yml
+```
+"""
+
 from argparse import ArgumentParser
 from sklearn.datasets import load_iris
 from model import RAKEL
