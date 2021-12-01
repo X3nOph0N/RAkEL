@@ -14,7 +14,7 @@ This repository is under develop yet.
 |ranking loss|||||
 |one error||||| -->
 
-currently no evaluation is done.
+No meaningful result for now.
 
 ## Requrements
 
