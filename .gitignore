@@ -2,3 +2,4 @@
 *csv
 TODO.md
 ./configuration.yml
+__pycache__/
