@@ -3,10 +3,12 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.svm import LinearSVC as SVMClassifier
 from sklearn.naive_bayes import GaussianNB as NBClassifier
 from sklearn.metrics import f1_score, accuracy_score, hamming_loss
-from numpy import ndarray, array, zeros, sum, sign, cast, int32, bool_
+from numpy import ndarray, array, zeros,sign, cast, int32, bool_
+from numpy import sum as array_sum
 from time import ctime, time
 from random import sample
 from tqdm import tqdm
+from itertools import combinations
 # from math import factorial
 
 
@@ -18,10 +20,9 @@ class LP():
     """
 
     def __init__(self, classifier: str, **kwargs) -> None:
-        self._classifier = getattr(globals(), classifier+'Classifier')(kwargs)
-        self._transform_dict = {}
-        self._reverse_transform_dict = {}
+        self._classifier = globals()[classifier+'Classifier'](**kwargs)
         self._label_count = None
+        self._powerset = None
 
     def fit(self, x: ndarray, y: ndarray) -> None:
         """
@@ -45,12 +46,17 @@ class LP():
         @outputs:
         None
         """
-        powerset = set([_ for _ in y])
-        self._label_count = 0
-        for i in powerset:
-            self._transform_dict[i] = self._label_count
-            self._reverse_transform_dict[self._label_count] = i
-            self._label_count += 1
+        
+        self._powerset = []
+        for _ in y:
+            find = False
+            for __ in self._powerset:
+                if (_ == __).all():
+                    find = True
+                    break
+            if not find:
+                self._powerset.append(_)
+                
         return
 
     def predict(self, x: ndarray) -> ndarray:
@@ -62,9 +68,9 @@ class LP():
         @outputs:
         y: predicted label, 1 for positive,-1 for negative and 0 for masked.
         """
-        return self.inverser_transform(self._classifier.predict(x))
+        return self.inverse_transform(self._classifier.predict(x.reshape(1,-1)))
 
-    def transform(self, y: ndarray) -> int:
+    def transform(self, y: ndarray) -> ndarray:
         """
         This function will transform the origin y to a unique label so the origin problem is 
         changed into a multiclass classification problem.
@@ -74,10 +80,17 @@ class LP():
         @outputs:
         a integer stands for the corresponding class that those label belong to.
         """
-        if len(y.shape) > 1:
-            return array([self._transform_dict[y_i] for y_i in y])
-        else:
-            return self._transform_dict[y]
+        # if len(y.shape) > 1:
+        #     return array([self._transform_dict[y_i] for y_i in y])
+        # else:
+        #     return self._transform_dict[y]
+        result = []
+        for _ in y:
+            for idx in range(len(self._powerset)):
+                if (_ == self._powerset[idx]).all():
+                    result.append(idx)
+                    break
+        return array(result)
 
     def inverse_transform(self, y: ndarray) -> ndarray:
         """
@@ -89,10 +102,7 @@ class LP():
         a array that stands the origin label situation,1 for positive, 
         -1 for negative and 0 for masked
         """
-        if len(y.shape) > 1:
-            return array([self._transform_dict[y_i] for y_i in y])
-        else:
-            return self._transform_dict[y]
+        return array([self._powerset[int(_)] for _ in y])
 
 
 class RAKEL():
@@ -116,19 +126,18 @@ class RAKEL():
         @params:
         train_x:train labels, in t*n array form
         train_y:train targets, in t*i array form
+        k: the size of subset
+        m: the number of total subsets
         @output:
         None
         """
         # assert(k<train_y.shape[1])
         # assert(m < factorial(train_y.shape[1])/factorial(m)/factorial(train_y.shape[1]-k))
-        self._LP_classifiers = [LP(self._LP_type, kwargs) for _ in range(m)]
+        self._LP_classifiers = [LP(self._LP_type, **kwargs) for _ in range(m)]
         self._k = k
         self._m = m
-        label_set = [i for i in range(train_y.shape[1])]
-        k_set = set()
-        while len(k_set) < self._k:
-            t = sample(label_set, self._m)
-            k_set = k_set.union(set(t))
+        k_set = [_ for _ in combinations(range(train_y.shape[1]),self._k)]
+        k_set = sample(k_set,self._m)
         # In our realization, we use 1 for positive, -1 for negative and 0 for not in current subset.
         self._masks = []
         for k_l in k_set:
@@ -139,7 +148,7 @@ class RAKEL():
             self._LP_classifiers[i].fit(train_x, train_y*self._masks[i])
         return
 
-    def predict(self, x, *args, **kwargs):
+    def predict(self, x, *args, **kwargs)->ndarray:
         """
         This function will give the prediction to the given labels.
         @params:
@@ -147,8 +156,8 @@ class RAKEL():
         @outputs:
         result: predicted labels, 1 for positive,-1 for negative and 0 for masked.
         """
-        result = sum([classifier.predict(x)
-                     for classifier in self._LP_classifiers], axis=1)
+        result = array_sum(array([classifier.predict(x)
+                     for classifier in self._LP_classifiers]).squeeze(), axis=0)
         result = sign(result*2+1)
         return result
 
@@ -167,6 +176,7 @@ class RAKEL():
         pred_Y = []
         for x in tqdm(val_X, desc='predicting...'):
             pred_Y.append(self.predict(x))
+        pred_Y = array(pred_Y)
         print('evaluating...')
         metrics['macro F1 score'] = f1_score(val_Y, pred_Y, average='macro')
         metrics['micro F1 score'] = f1_score(val_Y, pred_Y, average='micro')
