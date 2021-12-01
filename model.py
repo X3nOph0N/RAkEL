@@ -56,7 +56,6 @@ class LP():
                     break
             if not find:
                 self._powerset.append(_)
-                
         return
 
     def predict(self, x: ndarray) -> ndarray:

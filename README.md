@@ -16,7 +16,7 @@ This repository is under develop yet.
 
 No meaningful result for now.
 
-## Requrements
+## Requirements
 
 - Python 3.9.5
 - tqdm 4.62.1
