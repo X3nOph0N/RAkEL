@@ -1,9 +1,10 @@
 # Try not to use all parameters at the same time to avoid undefined behaviors
 # Here LPModel can only be one of 'RandomForest', 'SVM' and 'NB'
+# savePath: 'experiment_result.log'
 LPModel: 'RandomForest'
 dataPath: './data'
-k: 2
-m: 6
+k: 1
+m: 4
 # Below is RandomForest Parameters
 n_estimators: 50
 criterion: 'entropy'

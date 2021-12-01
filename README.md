@@ -4,8 +4,8 @@ This repository is under develop yet.
 
 ## Progress
 
-1. configuration file not finished.
-2. no test is done.
+1. Feature extraction is required to improve model performance.(Current performance is unsatisfying)
+2. More test in other classifier is required.
 
 ## Evaluation
 <!-- |evaluation criterion |LP||||
@@ -24,6 +24,7 @@ currently no evaluation is done.
 - numpy 1.21.1
 
 ## Reference
+
 [Random k-labelsets for multi-label classification,IEEE Transactions on Knowledge and Data Engineering, vol. 23,no. 7, pp. 1079–1089, 2011.][2]
 
 

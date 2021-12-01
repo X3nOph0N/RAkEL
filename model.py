@@ -167,7 +167,8 @@ class RAKEL():
         @params:
         val_x: validation labels
         val_y: validation targets
-        TODO
+        print_result: print the result if true
+        save_result: save the result to the given file if true
         @output:
         None
         """
@@ -189,7 +190,7 @@ class RAKEL():
                 result_file = open(kwargs['savePath'], 'wt')
             else:
                 result_file = open(ctime()+' result.txt', 'wt')
-            result_file.write('experiment time:'+ctime()+'\n')
+            result_file.write('experiment time:'+ctime()+'sec'+'\n')
             result_file.write("run time:"+str(end_time-start_time)+'\n')
             for metric in metrics:
                 result_file.write(metric +
@@ -197,10 +198,10 @@ class RAKEL():
             result_file.close()
         if print_result:
             system('cls')
-            print('experiment time:'+ctime()+'\n')
-            print("run time:"+str(end_time-start_time)+'\n')
+            print('experiment time:'+ctime())
+            print("run time:"+str(end_time-start_time)+'sec')
             for metric in metrics:
-                print('metric '+str(metric)+':'+str(metrics[metric])+'\n')
+                print('metric '+str(metric)+':'+str(metrics[metric]))
         return
 
     @property
