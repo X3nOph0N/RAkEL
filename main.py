@@ -6,7 +6,6 @@ python main.py --config-file configuration.yml
 """
 
 from argparse import ArgumentParser
-from sklearn.datasets import load_iris
 from model import RAKEL
 from numpy import load as data_load
 from yaml import load as config_load

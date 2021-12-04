@@ -1,21 +1,5 @@
 ﻿# RAkEL algorithm
 
-This repository is under develop yet.
-
-## Progress
-
-1. Feature extraction is required to improve model performance.(Current performance is unsatisfying)
-2. More test in other classifier is required.
-
-## Evaluation
-<!-- |evaluation criterion |LP||||
-|---|---|---|---|---|
-|hamming loss|||||
-|ranking loss|||||
-|one error||||| -->
-
-No meaningful result for now.
-
 ## Requirements
 
 - Python 3.9.5
@@ -31,6 +15,6 @@ No meaningful result for now.
   [1]: http://mulan.sourceforge.net/datasets-mlc.html
   [2]: https://ieeexplore.ieee.org/abstract/document/5567103
 
-
+<!-- Well, the time when I finished it I haven't got much time in feature extraction work, so I give up performance testing. -->
 
 
