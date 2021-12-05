@@ -186,14 +186,14 @@ class RAKEL():
         metrics['micro F1 score'] = f1_score(val_Y, pred_Y, average='micro')
         metrics['hamming loss score'] = hamming_loss(val_Y, pred_Y)
         metrics['acc score'] = accuracy_score(val_Y, pred_Y)
-        print('evaluation done.')
         end_time = time()
         if save_result:
-            print(save_result)
+            
             if 'savePath' in kwargs:
                 result_file = open(kwargs['savePath'], 'wt')
             else:
-                result_file = open(ctime()+' result.txt', 'wt')
+                result_file = open(str(int(time()))+'.log', 'wt')
+            result_file.write(self._LP_type+'\n')
             result_file.write('experiment time:'+ctime()+'sec'+'\n')
             result_file.write("run time:"+str(end_time-start_time)+'\n')
             for metric in metrics:
