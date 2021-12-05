@@ -1,4 +1,5 @@
 from os import system
+from numpy.core.fromnumeric import clip
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.svm import LinearSVC as SVMClassifier
 from sklearn.naive_bayes import GaussianNB as NBClassifier
@@ -56,6 +57,7 @@ class LP():
                     break
             if not find:
                 self._powerset.append(_)
+
         return
 
     def predict(self, x: ndarray) -> ndarray:
@@ -101,6 +103,7 @@ class LP():
         a array that stands the origin label situation,1 for positive, 
         -1 for negative and 0 for masked
         """
+
         return array([self._powerset[int(_)] for _ in y])
 
 
@@ -157,7 +160,8 @@ class RAKEL():
         """
         result = array_sum(array([classifier.predict(x)
                      for classifier in self._LP_classifiers]).squeeze(), axis=0)
-        result = sign(result*2+1)
+        result = result > (self._k/2)
+        result = cast[int32](result)
         return result
 
     def eval(self, val_X, val_Y, print_result: bool = True, save_result: bool = False, *args, **kwargs):
@@ -185,6 +189,7 @@ class RAKEL():
         print('evaluation done.')
         end_time = time()
         if save_result:
+            print(save_result)
             if 'savePath' in kwargs:
                 result_file = open(kwargs['savePath'], 'wt')
             else:

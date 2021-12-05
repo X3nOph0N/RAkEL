@@ -1,31 +1,31 @@
 # Try not to use all parameters at the same time to avoid undefined behaviors
 # Here LPModel can only be one of 'RandomForest', 'SVM' and 'NB'
 # savePath: 'experiment_result.log'
-LPModel: 'NB'
+LPModel: 'RandomForest'
 dataPath: './data'
 k: 1
 m: 4
 # Below is RandomForest Parameters
-# n_estimators: 50
-# criterion: 'entropy'
-# max_depth: 7
-# min_samples_split: 2
-# min_samples_leaf: 1
-# min_weight_fraction_leaf:
-# max_features: 'auto'
-# max_leaf_nodes:
-# min_impurity_decrease:
-# min_impurity_split:
-# bootstrap: True
-# oob_score: False
-# n_jobs: 4
-# random_state: 
-# verbose: 1
-# warm_start: False
-# class_weight: 
-# ccp_alpha: 0.0
-# max_samples: 
-
+n_estimators: 50
+criterion: 'entropy'
+max_depth: 7
+min_samples_split: 2
+min_samples_leaf: 1
+min_weight_fraction_leaf:
+max_features: 'auto'
+max_leaf_nodes:
+min_impurity_decrease:
+min_impurity_split:
+bootstrap: True
+oob_score: False
+n_jobs: 4
+random_state: 
+verbose: 1
+warm_start: False
+class_weight: 
+ccp_alpha: 0.0
+max_samples: 
+save_result: True
 # Below is SVM parameters
 # penalty: 'l2'
 # loss: 'squared_hinge'
@@ -39,6 +39,6 @@ m: 4
 # verbose: 1
 # random_state: 
 # max_iter: 1145
-
+# save_result: True
 # Below is NB parameters
-var_smoothing: 1.14514e-6
+# var_smoothing: 1.14514e-6
