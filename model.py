@@ -141,6 +141,7 @@ class RAKEL():
         k_set = [_ for _ in combinations(range(train_y.shape[1]),self._k)]
         k_set = sample(k_set,self._m)
         # In our realization, we use 1 for positive, -1 for negative and 0 for not in current subset.
+        train_y = train_y*2-1
         self._masks = []
         for k_l in k_set:
             mask = zeros(train_y.shape[1])
@@ -160,8 +161,9 @@ class RAKEL():
         """
         result = array_sum(array([classifier.predict(x)
                      for classifier in self._LP_classifiers]).squeeze(), axis=0)
-        result = result > (self._k/2)
-        result = cast[int32](result)
+        # result = result > (self._k/2)
+        # result = cast[int32](result)
+        result = (sign(result*2-1)/2+0.5)
         return result
 
     def eval(self, val_X, val_Y, print_result: bool = True, save_result: bool = False, *args, **kwargs):
@@ -182,6 +184,7 @@ class RAKEL():
             pred_Y.append(self.predict(x))
         pred_Y = array(pred_Y)
         print('evaluating...')
+
         metrics['macro F1 score'] = f1_score(val_Y, pred_Y, average='macro')
         metrics['micro F1 score'] = f1_score(val_Y, pred_Y, average='micro')
         metrics['hamming loss score'] = hamming_loss(val_Y, pred_Y)

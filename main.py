@@ -23,6 +23,7 @@ def main(LPModel: str, dataPath: str, k: int, m: int, **kwargs):
     pca = PCA(n_components=5)
     X_train = array(pca.fit_transform(X_train))
     X_test = array(pca.transform(X_test))
+
     RAkELClassifier = RAKEL(LPModel, **kwargs)
     RAkELClassifier.fit(X_train, Y_train, k, m)
     RAkELClassifier.eval(X_test, Y_test, **kwargs)
