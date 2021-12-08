@@ -2,9 +2,9 @@
 # Here LPModel can only be one of 'RandomForest', 'SVM' and 'NB'
 # savePath: 'experiment_result.log'
 LPModel: 'RandomForest'
-dataPath: './data'
-k: 1
-m: 4
+dataPath: './data/Re'
+k: 2
+m: 6
 # Below is RandomForest Parameters
 n_estimators: 50
 criterion: 'entropy'

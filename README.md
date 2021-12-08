@@ -15,6 +15,5 @@
   [1]: http://mulan.sourceforge.net/datasets-mlc.html
   [2]: https://ieeexplore.ieee.org/abstract/document/5567103
 
-<!-- Well, the time when I finished it I haven't got much time in feature extraction work, so I give up performance testing. -->
 
 
