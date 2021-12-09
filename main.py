@@ -9,12 +9,11 @@ from argparse import ArgumentParser
 from model import RAKEL
 from numpy import array, load as data_load
 from sklearn.decomposition import PCA
-from yaml import load as config_load
-from yaml import Loader
+from yaml import load as config_load,Loader
 from os.path import join
 
 
-def main(LPModel: str, dataPath: str, k: int, m: int, **kwargs):
+def main(LPModel: str, dataPath: str, k: int, m: int, **kwargs)-> None:
 
     X_train = data_load(join(dataPath, 'X_train.npy'))
     X_test = data_load(join(dataPath, 'X_test.npy'))
